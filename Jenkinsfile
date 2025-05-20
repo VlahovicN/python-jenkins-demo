@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "myapp-image"
-        CONTAINER_NAME = "myapp-container"
-    }
 
     stages {
         stage('Clone') {
@@ -16,7 +12,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir("my-app") {
-                sh "docker build -t $IMAGE_NAME ."
+                sh "docker build -t ${params.IMAGE_NAME} ."
             }
         }
         }
@@ -24,14 +20,14 @@ pipeline {
         stage('Remove Old Container') {
             steps {
                 sh """
-                docker rm -f $CONTAINER_NAME || true
+                docker rm -f ${params.CONTAINER_NAME} || true
                 """
             }
         }
 
         stage('Run Container') {
             steps {
-                sh "docker run -d -p 5001:5001 --name $CONTAINER_NAME $IMAGE_NAME"
+                sh "docker run -d -p 5001:5001 --name ${params.CONTAINER_NAME} ${params.IMAGE_NAME}"
             }
         }
     }
