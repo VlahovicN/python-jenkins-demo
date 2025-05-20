@@ -15,8 +15,10 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
+                dir("my-app") {
                 sh "docker build -t $IMAGE_NAME ."
             }
+        }
         }
 
         stage('Remove Old Container') {
